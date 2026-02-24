@@ -1,0 +1,109 @@
+---
+import '../styles/global.css';
+
+interface Schema {
+  type: string;
+  jsonLd: Record<string, unknown>;
+}
+
+interface Props {
+  frontmatter: {
+    title: string;
+    metaTitle: string;
+    metaDescription: string;
+    slug: string;
+    category: string;
+    publishedAt: string;
+    schemas?: Schema[];
+    chunks?: unknown[];
+  };
+}
+
+const { frontmatter } = Astro.props;
+const { metaTitle, metaDescription, category, slug, publishedAt, schemas = [], chunks = [] } = frontmatter;
+
+const categoryLabels: Record<string, string> = {
+  'historia-internet-ia': 'Historia & IA',
+  'marketing-digital': 'Marketing Digital',
+  'tecnologia-web': 'Tecnología Web',
+  'estrategia-empresarial': 'Estrategia Empresarial',
+};
+
+const categoryLabel = categoryLabels[category] ?? category;
+const canonicalUrl = `${Astro.site}${category}/${slug}`;
+const formattedDate = new Date(publishedAt).toLocaleDateString('es-ES', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{metaTitle}</title>
+    <meta name="description" content={metaDescription} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:title" content={metaTitle} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={metaTitle} />
+    <meta name="twitter:description" content={metaDescription} />
+
+    {schemas.map((schema) => (
+      <script type="application/ld+json" set:html={JSON.stringify(schema.jsonLd)} />
+    ))}
+
+    {chunks.length > 0 && (
+      <script type="application/ai-chunks+json" set:html={JSON.stringify(chunks)} />
+    )}
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar__inner">
+        <a href="/" class="navbar__brand">WST Blog</a>
+        <ul class="navbar__links">
+          <li><a href="/">Blog</a></li>
+          <li><a href="https://websitestechnology.com" target="_blank" rel="noopener">WebsitesTechnology</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="article-page">
+      <div class="article-container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/">Blog</a>
+          <span class="breadcrumb__sep">›</span>
+          <a href={`/?category=${category}`}>{categoryLabel}</a>
+          <span class="breadcrumb__sep">›</span>
+          <span>{frontmatter.title}</span>
+        </nav>
+
+        <p style="font-size: 0.8125rem; color: var(--text-dark-muted); margin-bottom: 0.5rem;">
+          {formattedDate}
+        </p>
+
+        <div class="article-content">
+          <slot />
+        </div>
+
+        <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-dark);">
+          <a href="/" class="back-to-blog">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+            </svg>
+            Volver al blog
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <footer class="blog-footer">
+      <p>© {new Date().getFullYear()} WebsitesTechnology — Blog de SEO y Marketing Digital</p>
+    </footer>
+  </body>
+</html>

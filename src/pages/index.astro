@@ -1,0 +1,112 @@
+---
+import { getCollection } from 'astro:content';
+import '../styles/global.css';
+
+const allPosts = await getCollection('blog');
+const posts = allPosts.sort(
+  (a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime(),
+);
+
+const categoryFilter = Astro.url.searchParams.get('category') ?? '';
+
+const filteredPosts = categoryFilter
+  ? posts.filter((p) => p.data.category === categoryFilter)
+  : posts;
+
+const categoryLabels: Record<string, string> = {
+  'historia-internet-ia': 'Historia & IA',
+  'marketing-digital': 'Marketing Digital',
+  'tecnologia-web': 'Tecnología Web',
+  'estrategia-empresarial': 'Estrategia Empresarial',
+};
+
+const categories = [...new Set(posts.map((p) => p.data.category))];
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog — WebsitesTechnology</title>
+    <meta
+      name="description"
+      content="Artículos sobre SEO, marketing digital, tecnología web y estrategia empresarial."
+    />
+    <link rel="canonical" href={Astro.site?.toString()} />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar__inner">
+        <a href="/" class="navbar__brand">WST Blog</a>
+        <ul class="navbar__links">
+          <li>
+            <a href="https://websitestechnology.com" target="_blank" rel="noopener"
+              >WebsitesTechnology</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="blog-index">
+      <div class="blog-index__header">
+        <h1 class="blog-index__title">Blog</h1>
+        <p class="blog-index__subtitle">
+          Artículos sobre SEO, marketing digital y tecnología web
+        </p>
+
+        <div class="blog-index__categories">
+          <a href="/" class:list={['category-pill', { active: !categoryFilter }]}>Todos</a>
+          {
+            categories.map((cat) => (
+              <a
+                href={`/?category=${cat}`}
+                class:list={['category-pill', { active: categoryFilter === cat }]}
+              >
+                {categoryLabels[cat] ?? cat}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+
+      {
+        filteredPosts.length === 0 ? (
+          <div
+            style="max-width: 1280px; margin: 0 auto; text-align: center; padding: 4rem 0; color: var(--text-dark-muted);"
+          >
+            No hay artículos en esta categoría.
+          </div>
+        ) : (
+          <div class="blog-grid">
+            {filteredPosts.map((post) => (
+              <a
+                href={`/${post.data.category}/${post.data.slug}`}
+                class="post-card"
+              >
+                <span class="post-card__category">
+                  {categoryLabels[post.data.category] ?? post.data.category}
+                </span>
+                <h2 class="post-card__title">{post.data.title}</h2>
+                <p class="post-card__description">{post.data.metaDescription}</p>
+                <time class="post-card__date" datetime={post.data.publishedAt}>
+                  {new Date(post.data.publishedAt).toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </time>
+                <span class="post-card__arrow" aria-hidden="true">→</span>
+              </a>
+            ))}
+          </div>
+        )
+      }
+    </main>
+
+    <footer class="blog-footer">
+      <p>© {new Date().getFullYear()} WebsitesTechnology — Blog de SEO y Marketing Digital</p>
+    </footer>
+  </body>
+</html>
