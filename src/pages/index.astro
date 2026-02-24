@@ -80,9 +80,11 @@ const categories = [...new Set(posts.map((p) => p.data.category))];
           </div>
         ) : (
           <div class="blog-grid">
-            {filteredPosts.map((post) => (
+            {filteredPosts.map((post) => {
+              const slug = post.data.slug ?? post.id.split('/').pop();
+              return (
               <a
-                href={`/${post.data.category}/${post.data.slug}`}
+                href={`/${post.data.category}/${slug}`}
                 class="post-card"
               >
                 <span class="post-card__category">
@@ -99,7 +101,8 @@ const categories = [...new Set(posts.map((p) => p.data.category))];
                 </time>
                 <span class="post-card__arrow" aria-hidden="true">→</span>
               </a>
-            ))}
+              );
+            })}
           </div>
         )
       }
