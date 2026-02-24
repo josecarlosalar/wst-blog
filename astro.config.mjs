@@ -1,7 +1,6 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://josecarlosalar.github.io',
-  base: '/wst-blog',
+  site: 'https://blog.websitestechnology.com',
   output: 'static',
 });

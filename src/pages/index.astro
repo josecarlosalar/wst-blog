@@ -21,7 +21,6 @@ const categoryLabels: Record<string, string> = {
 };
 
 const categories = [...new Set(posts.map((p) => p.data.category))];
-const baseUrl = (import.meta as any).env.BASE_URL.replace(/\/$/, '');
 ---
 
 <!doctype html>
@@ -85,7 +84,7 @@ const baseUrl = (import.meta as any).env.BASE_URL.replace(/\/$/, '');
               const slug = post.data.slug ?? post.id.split('/').pop()!.replace(/\.md$/, '');
               return (
               <a
-                href={`${baseUrl}/${post.data.category}/${slug}`}
+                href={`/${post.data.category}/${slug}`}
                 class="post-card"
               >
                 <span class="post-card__category">
