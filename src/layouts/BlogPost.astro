@@ -1,5 +1,5 @@
 ---
-import '../styles/global.css';
+import "../styles/global.css";
 
 interface Schema {
   type: string;
@@ -20,21 +20,29 @@ interface Props {
 }
 
 const { frontmatter } = Astro.props;
-const { metaTitle, metaDescription, category, slug, publishedAt, schemas = [], chunks = [] } = frontmatter;
+const {
+  metaTitle,
+  metaDescription,
+  category,
+  slug,
+  publishedAt,
+  schemas = [],
+  chunks = [],
+} = frontmatter;
 
 const categoryLabels: Record<string, string> = {
-  'historia-internet-ia': 'Historia & IA',
-  'marketing-digital': 'Marketing Digital',
-  'tecnologia-web': 'Tecnología Web',
-  'estrategia-empresarial': 'Estrategia Empresarial',
+  "historia-internet-ia": "Historia & IA",
+  "marketing-digital": "Marketing Digital",
+  "tecnologia-web": "Tecnología Web",
+  "estrategia-empresarial": "Estrategia Empresarial",
 };
 
 const categoryLabel = categoryLabels[category] ?? category;
 const canonicalUrl = `${Astro.site}${category}/${slug}`;
-const formattedDate = new Date(publishedAt).toLocaleDateString('es-ES', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
+const formattedDate = new Date(publishedAt).toLocaleDateString("es-ES", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
 });
 ---
 
@@ -54,27 +62,47 @@ const formattedDate = new Date(publishedAt).toLocaleDateString('es-ES', {
     <meta name="twitter:title" content={metaTitle} />
     <meta name="twitter:description" content={metaDescription} />
 
-    {schemas.map((schema) => (
-      <script type="application/ld+json" set:html={JSON.stringify(schema.jsonLd)} />
-    ))}
+    {
+      schemas.map((schema) => (
+        <script
+          type="application/ld+json"
+          set:html={JSON.stringify(schema.jsonLd)}
+        />
+      ))
+    }
 
-    {chunks.length > 0 && (
-      <script type="application/ai-chunks+json" set:html={JSON.stringify(chunks)} />
-    )}
+    {
+      chunks.length > 0 && (
+        <script
+          type="application/ai-chunks+json"
+          set:html={JSON.stringify(chunks)}
+        />
+      )
+    }
   </head>
   <body>
     <nav class="modern-navbar">
       <div class="navbar-wrapper">
         <a href="https://websitestechnology.com" class="logo-container-nav">
-          <img src="/logo-color.png" alt="WebsitesTechnology" class="logo-image" />
+          <img
+            src="/logo-color.png"
+            alt="WebsitesTechnology"
+            class="logo-image"
+          />
         </a>
         <div class="nav-links-desktop">
-          <a href="https://websitestechnology.com" class="nav-link-item">Inicio</a>
+          <a href="https://websitestechnology.com" class="nav-link-item"
+            >Inicio</a
+          >
           <a href="/" class="nav-link-item nav-active">Blog</a>
-          <a href="https://websitestechnology.com" class="nav-link-item">Servicios</a>
+          <a href="https://websitestechnology.com" class="nav-link-item"
+            >Servicios</a
+          >
         </div>
         <div class="nav-actions-desktop">
-          <a href="https://websitestechnology.com/app" class="btn-contact">Ir a la App</a>
+          <a href="https://websitestechnology.com/app" class="btn-contact"
+            >Ir a la App</a
+          >
         </div>
       </div>
     </nav>
@@ -89,7 +117,9 @@ const formattedDate = new Date(publishedAt).toLocaleDateString('es-ES', {
           <span>{frontmatter.title}</span>
         </nav>
 
-        <p style="font-size: 0.8125rem; color: var(--text-dark-muted); margin-bottom: 0.5rem;">
+        <p
+          style="font-size: 0.8125rem; color: var(--text-dark-muted); margin-bottom: 0.5rem;"
+        >
           {formattedDate}
         </p>
 
@@ -97,10 +127,16 @@ const formattedDate = new Date(publishedAt).toLocaleDateString('es-ES', {
           <slot />
         </div>
 
-        <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-dark);">
+        <div
+          style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-dark);"
+        >
           <a href="/" class="back-to-blog">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M7 16l-4-4m0 0l4-4m-4 4h18"></path>
             </svg>
             Volver al blog
           </a>
@@ -112,12 +148,15 @@ const formattedDate = new Date(publishedAt).toLocaleDateString('es-ES', {
       <div class="footer-wrapper">
         <div class="footer-bottom-bar">
           <div class="footer-bottom-content">
-            <p class="footer-copyright-text">© {new Date().getFullYear()} WebsitesTechnology. Todos los derechos reservados.</p>
+            <p class="footer-copyright-text">
+              © {new Date().getFullYear()} WebsitesTechnology. Todos los derechos
+              reservados.
+            </p>
             <nav class="footer-legal-links">
-              <a href="/politica-privacidad" class="footer-legal-link">Privacidad</a>
-              <a href="/politica-cookies" class="footer-legal-link">Cookies</a>
-              <a href="/terminos-servicio" class="footer-legal-link">Términos</a>
-              <a href="/aviso-legal" class="footer-legal-link">Aviso Legal</a>
+              <a href="/" class="footer-legal-link">Privacidad</a>
+              <a href="/" class="footer-legal-link">Cookies</a>
+              >
+              <a href="/" class="footer-legal-link">Aviso Legal</a>
             </nav>
           </div>
         </div>
