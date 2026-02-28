@@ -449,6 +449,14 @@ a:hover {
   margin: 2rem 0;
 }
 
+/* Aislamiento de componentes interactivos embebidos:
+   los componentes generados por IA asumen contexto claro,
+   se resetea la herencia de color del tema oscuro del blog */
+.article-content .interactive-embed,
+.article-content .interactive-embed * {
+  color: revert;
+}
+
 /* ============================
    BLOG INDEX - CARDS
    Estilo feature-card del Home Angular
