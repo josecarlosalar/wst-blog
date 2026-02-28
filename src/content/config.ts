@@ -1,7 +1,7 @@
 import { defineCollection, z } from 'astro:content';
 
 const blog = defineCollection({
-  type: 'content',
+  type: 'data',
   schema: z.object({
     title: z.string(),
     metaTitle: z.string(),
@@ -9,6 +9,7 @@ const blog = defineCollection({
     slug: z.string().optional(),
     category: z.string(),
     publishedAt: z.string(),
+    bodyHtml: z.string().default(''),
     schemas: z
       .array(z.object({ type: z.string(), jsonLd: z.record(z.unknown()) }))
       .default([]),
