@@ -47,12 +47,20 @@ const formattedDate = new Date(publishedAt).toLocaleDateString("es-ES", {
   day: "numeric",
 });
 
-// Extraer <script> del bodyHtml para inyectarlos como tags reales (innerHTML no los ejecuta)
+// Extraer <script> y <style> del bodyHtml para inyectarlos correctamente:
+// - <style> en el <head> (el navegador ignora styles en body)
+// - <script> antes de </body> (innerHTML no ejecuta scripts)
 const scriptContents: string[] = [];
-const cleanBodyHtml = bodyHtml.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gi, (_match, code) => {
-  scriptContents.push(code);
-  return '';
-});
+const styleContents: string[] = [];
+const cleanBodyHtml = bodyHtml
+  .replace(/<style\b[^>]*>([\s\S]*?)<\/style>/gi, (_match, css) => {
+    styleContents.push(css);
+    return '';
+  })
+  .replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gi, (_match, code) => {
+    scriptContents.push(code);
+    return '';
+  });
 ---
 
 <!doctype html>
@@ -88,6 +96,8 @@ const cleanBodyHtml = bodyHtml.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gi, 
         />
       )
     }
+
+    {styleContents.map((css) => <style set:html={css} />)}
   </head>
   <body>
     <nav class="modern-navbar">
